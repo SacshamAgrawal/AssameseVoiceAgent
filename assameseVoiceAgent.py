@@ -53,25 +53,25 @@ async def entrypoint(ctx: JobContext):
     agent = InterviewAgent()
 
     session = AgentSession(
-        turn_detection="stt",
+        turn_detection="vad",
         preemptive_generation=True,
         vad=silero.VAD.load(
-            min_silence_duration=200,
-            min_speech_duration=100,
+            min_silence_duration=0.10,
+            min_speech_duration=0.20,
         ),
-        ## STT: Whisper via OpenAI
-        stt=openai.STT(
-            model="whisper-1",
-            language="as"  # Assamese language code
+        ## STT: ElevenLabs for Assamese
+        stt=elevenlabs.STT(
+            language_code="as"  # Assamese language code
         ),
         llm=openai.LLM(
-            model="gpt-4o",
-            temperature=0.0,
+            model="gpt-4o-mini",
+            temperature=0.7,
         ), 
         ## TTS: ElevenLabs with Assamese support
         tts=elevenlabs.TTS(
             model="eleven_flash_v2_5",
-            voice_id="FGY2WhTYpPnrIDTdsKH5",
+            # voice_id=os.getenv("ELEVENLABS_VOICE_ID_SIMRAN"),
+            voice_id=os.getenv("ELEVENLABS_VOICE_ID_MUSKAN")
         ),
     )
 
